@@ -67,12 +67,12 @@ class TaskModel:
             print(e)
             
     @classmethod
-    def tarea_tiempo_limite(cls):
+    def tarea_tiempo_limite(cls, zona_usuario):
         
-        hora_actual = datetime.now().time().replace(second=0,microsecond=0)
-        fecha_actual = datetime.now().date()
+        hora_actual = datetime.now(zona_usuario).time().replace(second=0,microsecond=0)
+        fecha_actual = datetime.now(zona_usuario).date()
         
-        hora_inicio_dia = datetime.now().time().replace(hour=0,minute=0,second=0,microsecond=0)
+        hora_inicio_dia = datetime.now(zona_usuario).time().replace(hour=0,minute=0,second=0,microsecond=0)
         
         conexion = obtener_conexion()
         cursor = conexion.cursor()
