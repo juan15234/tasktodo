@@ -153,7 +153,7 @@ def completar_tarea():
 @app.route('/tarea_tiempo_limite')
 def tarea_tiempo_limite():
     
-    zona = repuest.args.get('zona','UTC)
+    zona = repuest.args.get('zona','UTC')
     
     try:
     	zona_usuario = ZoneInfo(zona)
