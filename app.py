@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import logging
 import sys
+from zoneinfo import ZoneInfo
 
 from models.UserModel import UserModel
 from models.TaskModel import TaskModel
@@ -152,7 +153,14 @@ def completar_tarea():
 @app.route('/tarea_tiempo_limite')
 def tarea_tiempo_limite():
     
-    tarea_tiempo_limite = TaskModel.tarea_tiempo_limite()
+    zona = repuesto.args.get('zona','UTC)
+    
+    try:
+    	zona_usuario = ZoneInfo(zona)
+    except Exception:
+        zona_usuario = ZoneInfo('UTC')
+    
+    tarea_tiempo_limite = TaskModel.tarea_tiempo_limite(zona_usuario)
     
     return jsonify({'tareas':tarea_tiempo_limite})
 
