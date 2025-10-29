@@ -81,6 +81,7 @@ class TaskModel:
         resultado = cursor.fetchall()
         
         logger.info('%s',hora_actual)
+        logger.info('%s',fecha_actual)
         
         tareas_tiempo_limite = []
         
