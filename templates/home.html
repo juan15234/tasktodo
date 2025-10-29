@@ -337,7 +337,7 @@
                 
                 const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-                const response = await fetch(´/tarea_tiempo_limite?zona=${encodeURIComponent(zonaHoraria)}´)
+                const response = await fetch(`/tarea_tiempo_limite?zona=${encodeURIComponent(zonaHoraria)}`)
                     
                 tareas_tiempo_limite_general = await response.json()
 
