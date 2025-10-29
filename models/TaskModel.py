@@ -1,7 +1,5 @@
 from conexion import obtener_conexion
 from datetime import datetime, timedelta, time
-import logging
-logger = logging.getLogger(__name__)
 
 class TaskModel:
     
@@ -80,9 +78,6 @@ class TaskModel:
         
         resultado = cursor.fetchall()
         
-        logger.info('%s',hora_actual)
-        logger.info('%s',fecha_actual)
-        
         tareas_tiempo_limite = []
         
         for tarea in resultado:
@@ -94,7 +89,6 @@ class TaskModel:
                 tarea_hora = time(horas, minutos, segundos)
             else:
                 tarea_hora = tarea[3]
-            logger.info('%s %s %s %s',tarea[0],tarea[1], tarea[2], tarea[3])
             
             if isinstance(tarea_hora, time) and tarea_hora == hora_actual:
                 id_tarea_y_usuario = [tarea[0],tarea[1],tarea[2]]
@@ -103,9 +97,5 @@ class TaskModel:
             if isinstance(tarea_hora, time) and tarea_hora == hora_inicio_dia:
                 id_tarea_y_usuario = [tarea[0],tarea[1],tarea[2]]
                 tareas_tiempo_limite.append(id_tarea_y_usuario)
-            
-        
-        
-        logger.info('%s',tareas_tiempo_limite)
         
         return tareas_tiempo_limite
