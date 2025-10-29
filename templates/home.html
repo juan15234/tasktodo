@@ -334,9 +334,11 @@
 
         async function notificaciones(){
             try{
+                
+                const zonaHoraria = Intl.DateTimeFormat().resolvedOptions().timeZone
 
-                const response = await fetch('/tarea_tiempo_limite')
-
+                const response = await fetch(´/tarea_tiempo_limite?zona=${encodeURIComponent(zonaHoraria)}´)
+                    
                 tareas_tiempo_limite_general = await response.json()
 
                 for(let i=0;i<tareas_tiempo_limite_general.tareas.length;i++){
