@@ -63,6 +63,10 @@
             dateFormat: "Y-m-d"
         });
 
+        window.addEventListener('resize', () =>{
+            location.reload()
+        })
+
         if(Notification.permission === 'default'){
             Notification.requestPermission().then((permiso) => {
                 if(permiso !== 'granted'){
@@ -183,17 +187,30 @@
                             const boton_compartir = document.createElement('button')
                             boton_compartir.textContent = 'compartir'
 
+                            const nombre_fecha_hora_div = document.createElement('div')
+                            nombre_fecha_hora_div.className = 'nombre_fecha_hora_div'
+
                             botones_tarea.appendChild(boton_completar)
                             botones_tarea.appendChild(boton_eliminar)
                             botones_tarea.appendChild(boton_compartir)
 
-                            tarea_elemento.appendChild(nombre_tarea)
-                            fecha_hora_tarea.appendChild(horaTarea)
-                            fecha_hora_tarea.appendChild(fechaTarea)
-                            tarea_elemento.appendChild(fecha_hora_tarea)
-                            tarea_elemento.appendChild(botones_tarea)
+                            if(window.innerWidth < 768){
+                                nombre_fecha_hora_div.appendChild(nombre_tarea)
+                                nombre_fecha_hora_div.appendChild(horaTarea)
+                                nombre_fecha_hora_div.appendChild(fechaTarea)
+                                tarea_elemento.appendChild(nombre_fecha_hora_div)
+                                tarea_elemento.appendChild(botones_tarea)
 
-                            contenedor_tareas.appendChild(tarea_elemento)
+                                contenedor_tareas.appendChild(tarea_elemento)
+                            }else{
+                                tarea_elemento.appendChild(nombre_tarea)
+                                fecha_hora_tarea.appendChild(horaTarea)
+                                fecha_hora_tarea.appendChild(fechaTarea)
+                                tarea_elemento.appendChild(fecha_hora_tarea)
+                                tarea_elemento.appendChild(botones_tarea)
+
+                                contenedor_tareas.appendChild(tarea_elemento)
+                            }
 
                         }else{
                             tareas_completadas.push(tareas[i])
