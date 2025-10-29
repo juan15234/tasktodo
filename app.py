@@ -15,17 +15,6 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-# Configurar logging para que salga a stdout
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    handlers=[logging.StreamHandler(sys.stdout)]
-)
-
-logger = logging.getLogger(__name__)
-logger.info("Logger inicializado correctamente")
-
-
 @app.route('/')
 def index():
     
@@ -159,8 +148,6 @@ def tarea_tiempo_limite():
     	zona_usuario = ZoneInfo(zona)
     except Exception:
         zona_usuario = ZoneInfo('UTC')
-        
-    logger.info('%s',zona_usuario)
     
     tarea_tiempo_limite = TaskModel.tarea_tiempo_limite(zona_usuario)
     
