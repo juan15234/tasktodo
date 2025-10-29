@@ -2,6 +2,8 @@ from flask import Flask, request, url_for, redirect, render_template, session, j
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+import logging
+import sys
 
 from models.UserModel import UserModel
 from models.TaskModel import TaskModel
@@ -11,6 +13,17 @@ load_dotenv(dotenv_path='.env')
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+
+# Configurar logging para que salga a stdout
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)]
+)
+
+logger = logging.getLogger(__name__)
+logger.info("Logger inicializado correctamente")
+
 
 @app.route('/')
 def index():
