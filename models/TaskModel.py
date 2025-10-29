@@ -1,5 +1,7 @@
 from conexion import obtener_conexion
 from datetime import datetime, timedelta, time
+import logging
+logger = logging.getLogger(__name__)
 
 class TaskModel:
     
