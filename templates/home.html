@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/home-style.css">
+</head>
+<body>
+    <nav>
+        <div class="titulos">
+            <h1>T A S K   T O   D O</h1>
+            <h4>GESTIONA TUS TAREAS Y PROYECTOS</h4>
+        </div>
+
+        <div class="perfil">
+            <h3 id='h3_usuario'></h3>
+        </div>
+    </nav>
+
+    <div class="botones">
+        <button id="mostrar-agregar-tarea-boton">➕ agregar</button>
+        <button id='cerrar_sesion' onclick='logout()'>🚪 salir</button>
+    </div>
+
+    <div class="tareas" id='tareas'>
+        <form action="/agregar_tarea" method="POST" id='agregar-tarea'>
+            <h2>agregar tarea</h2>
+            
+            <div class="info">
+                <label for="nombre_tarea"><strong>*</strong>Nombre Tarea</label>
+                <input type="text" name='nombre_tarea' id="nombre_tarea" required>
+            </div>
+
+            <div class="info">
+                <label for="fecha"><strong>*</strong>Fecha limite</label>
+                <input type="date" name="fecha" id="fecha" placeholder="fecha📅" >
+            </div>
+
+            <div class="info">
+                <label for="hora">Hora limite <span>(no poner si es todo el dia)</span></label>
+                <input type="time" name="hora" id="hora" placeholder="Selecciona hora 🕒">
+            </div>
+
+            <button type="button" onclick="agregar_tarea()">agregar</button>
+        </form>
+    </div>
+
+    <!-- Incluye Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+    <script>
+
+        flatpickr("input[type='date']", {
+            dateFormat: "Y-m-d"
+        });
+
+        if(Notification.permission === 'default'){
+            Notification.requestPermission().then((permiso) => {
+                if(permiso !== 'granted'){
+                    alert('Para recibir recordatorios, debes permitir las notificaciones')
+                }
+            })
+        }
+
+
+        const agregar_tarea_form = document.getElementById('agregar-tarea')
+        const boton_mostrar_agregar_tarea = document.getElementById('mostrar-agregar-tarea-boton')
+
+        boton_mostrar_agregar_tarea.addEventListener('click', (e)=>{
+
+            agregar_tarea_form.style.display = 'grid'
+            e.stopPropagation();
+
+        })
+
+        agregar_tarea_form.addEventListener('click', (e)=>{
+            e.stopPropagation()
+        })
+
+        document.addEventListener('click', () =>{
+            agregar_tarea_form.style.display = 'none'
+        })
+
+        async function agregar_tarea(){
+            const nombre_tarea = document.getElementById('nombre_tarea').value.toUpperCase()
+            const fecha_limite = document.getElementById('fecha').value
+            const hora_limite = document.getElementById('hora').value
+
+            console.log(hora_limite)
+
+            if(nombre_tarea.length == 0 || fecha_limite.length == 0 || nombre_tarea.length == 0 && fecha_limite.length == 0){
+                console.log('ingrese todos los datos')
+            }else{
+                const datos = {nombre_tarea,fecha_limite,hora_limite}
+
+                try{
+                    const add_task = await fetch('/agregar_tarea',{
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(datos)
+                    })
+
+                    const response = await add_task.json()
+
+                    console.log(response)
+
+                    location.reload(true)
+
+                }catch(error){
+
+                    console.log(error)
+                }
+            }
+        }
+
+        const contenedor_tareas = document.getElementById('tareas')
+
+
+        async function tareas_usuario(){
+
+            try{
+
+                const response = await fetch(`/tareas_usuario`)
+
+                const tareas = await response.json()
+
+                const tareas_en_contenedor = document.querySelectorAll('.tareas .tarea')
+                
+                tareas_en_contenedor.forEach(tarea => tarea.remove())
+
+                if(tareas.length > 0 ){
+
+                    tareas_completadas = []
+
+                    for(let i = 0; i < tareas.length ; i++){
+
+                        if(tareas[i].realizada == 0){
+                            const tarea_elemento = document.createElement('div')
+                            tarea_elemento.className = 'tarea'
+                            tarea_elemento.id = tareas[i].idTarea
+                            
+                            const nombre_tarea = document.createElement('h4')
+                            nombre_tarea.textContent = tareas[i].nombreTarea
+                            nombre_tarea.id = 'nombre_tarea'
+
+                            const fecha_hora_tarea = document.createElement('div')
+                            fecha_hora_tarea.className = 'fecha_hora_tarea'
+
+                            const fechaTarea = document.createElement('h4')
+                            fechaTarea.textContent = tareas[i].fechaTarea
+                            fechaTarea.id = 'fechaTarea'
+
+                            const horaTarea = document.createElement('p')
+                            if(tareas[i].horaTarea == '0:00:00'){
+                                horaTarea.textContent = 'Todo el dia'
+                            }else{
+                                horaTarea.textContent = tareas[i].horaTarea
+                            }
+                            horaTarea.id = 'hora_tarea'
+
+                            const botones_tarea = document.createElement('div')
+                            botones_tarea.className = 'botones-tarea'
+
+                            const boton_completar = document.createElement('button')
+                            boton_completar.textContent = 'completar'
+                            boton_completar.id = 'completar'
+                            boton_completar.onclick = () => completar_tarea(boton_completar.id)
+
+                            const boton_eliminar = document.createElement('button')
+                            boton_eliminar.textContent = 'eliminar'
+                            boton_eliminar.id = 'eliminar'
+                            boton_eliminar.onclick = () => eliminar_tarea(boton_eliminar.id)
+
+                            const boton_compartir = document.createElement('button')
+                            boton_compartir.textContent = 'compartir'
+
+                            botones_tarea.appendChild(boton_completar)
+                            botones_tarea.appendChild(boton_eliminar)
+                            botones_tarea.appendChild(boton_compartir)
+
+                            tarea_elemento.appendChild(nombre_tarea)
+                            fecha_hora_tarea.appendChild(horaTarea)
+                            fecha_hora_tarea.appendChild(fechaTarea)
+                            tarea_elemento.appendChild(fecha_hora_tarea)
+                            tarea_elemento.appendChild(botones_tarea)
+
+                            contenedor_tareas.appendChild(tarea_elemento)
+
+                        }else{
+                            tareas_completadas.push(tareas[i])
+                        }
+
+                        if(tareas_completadas.length == tareas.length){
+                            
+                            const sin_tareas = document.createElement('h2')
+                            sin_tareas.textContent = ''
+                            sin_tareas.textContent = '¡No tienes tareas!'
+
+                            contenedor_tareas.appendChild(sin_tareas)
+                        }
+
+                    }
+
+                }else{
+                    const sin_tareas = document.createElement('h2')
+                    sin_tareas.textContent = '¡No tienes tareas!'
+
+                    contenedor_tareas.appendChild(sin_tareas)
+                }
+
+            }catch(error){
+                console.log(error)
+            }
+        }
+
+        tareas_usuario()
+
+        async function logout(){
+
+            try{
+
+                const cerrar_sesion = await fetch(`/logout`)
+
+                const response = await cerrar_sesion.json()
+
+                window.location.replace(response.location);
+
+
+
+
+            }catch(error){
+                console.log(error)
+            }
+
+        }
+
+        async function eliminar_tarea(id){
+            try{
+
+                const boton_eliminar = document.getElementById(id)
+
+                const botones_div = boton_eliminar.parentElement
+
+                const tarea = botones_div.parentElement
+
+                const id_tarea = tarea.id
+
+                const dato = {id_tarea}
+
+                const eliminar = await fetch('/eliminar_tarea',{
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(dato)
+                })
+
+                const response = await eliminar.json()
+
+                if(response.status == 'ok'){
+                    tarea.remove()
+                    location.reload(true)
+                }
+
+            }catch(error){
+                console.log(error)
+            }
+        }
+
+        async function completar_tarea(id){
+
+            try{
+
+                const boton_eliminar = document.getElementById(id)
+
+                const botones_div = boton_eliminar.parentElement
+
+                const tarea = botones_div.parentElement
+
+                const id_tarea = tarea.id
+
+                const dato = {id_tarea}
+
+                const eliminar = await fetch('/completar_tarea',{
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify(dato)
+                })
+
+                const response = await eliminar.json()
+
+                console.log(response)
+
+                if(response.status == 'ok'){
+                    tarea.remove()
+                    location.reload(true)
+                }
+
+            }catch(error){
+                console.log(error)
+            }
+
+        }
+
+
+        async function datos_perfil(){
+
+            const h3_usuario = document.getElementById('h3_usuario')
+
+            try{
+
+                const response = await fetch('/perfil')
+
+                const perfil = await response.json()
+
+                h3_usuario.textContent = '!BIENVENIDO ' + perfil.usuario + '¡'
+
+                idUsuario = perfil.idUsuario
+
+            }catch(error){
+                console.log(error)
+            }
+        }
+
+        datos_perfil()
+
+
+        async function notificaciones(){
+            try{
+
+                const response = await fetch('/tarea_tiempo_limite')
+
+                tareas_tiempo_limite_general = await response.json()
+
+                for(let i=0;i<tareas_tiempo_limite_general.tareas.length;i++){
+                    if(tareas_tiempo_limite_general.tareas[i][1] == idUsuario){
+                        if(Notification.permission === 'granted'){
+                            try{
+                                new Notification('recordatorio tarea', {
+                                body: tareas_tiempo_limite_general.tareas[i][2],
+                                icon: 'https://cdn-icons-png.flaticon.com/512/992/992700.png'
+                            })
+                            }catch(error){
+                                console.log(error)
+                            }
+                        }
+                    }
+                }
+
+            }catch(error){
+                console.log(error)
+            }
+        }
+
+        setInterval(notificaciones, 60000)
+
+        notificaciones()
+
+    </script>
+
+</body>
+</html>
