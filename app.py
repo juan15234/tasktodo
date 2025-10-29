@@ -159,6 +159,8 @@ def tarea_tiempo_limite():
     	zona_usuario = ZoneInfo(zona)
     except Exception:
         zona_usuario = ZoneInfo('UTC')
+        
+    logger.info('%s',zona_usuario)
     
     tarea_tiempo_limite = TaskModel.tarea_tiempo_limite(zona_usuario)
     
