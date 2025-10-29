@@ -64,7 +64,11 @@
         });
 
         window.addEventListener('resize', () =>{
-            location.reload()
+            if(window.innerWidth < 768){
+                console.log('.')
+            }else{
+                location.reload()
+            }
         })
 
         if(Notification.permission === 'default'){
