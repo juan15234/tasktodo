@@ -1,8 +1,7 @@
 from flask import Flask, request, url_for, redirect, render_template, session, jsonify
-from datetime import datetime, timedelta
+from datetime import timedelta
 from dotenv import load_dotenv
 import os
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from models.UserModel import UserModel
 from models.TaskModel import TaskModel
