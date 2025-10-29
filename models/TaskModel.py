@@ -78,7 +78,7 @@ class TaskModel:
         
         resultado = cursor.fetchall()
         
-        print(hora_actual)
+        logger.info('%s',hora_actual)
         
         tareas_tiempo_limite = []
         
@@ -91,7 +91,7 @@ class TaskModel:
                 tarea_hora = time(horas, minutos, segundos)
             else:
                 tarea_hora = tarea[3]
-            print(tarea[0],tarea[1], tarea[2], tarea[3])
+            logger.info('%s %s %s %s',tarea[0],tarea[1], tarea[2], tarea[3])
             
             if isinstance(tarea_hora, time) and tarea_hora == hora_actual:
                 id_tarea_y_usuario = [tarea[0],tarea[1],tarea[2]]
@@ -103,6 +103,6 @@ class TaskModel:
             
         
         
-        print(tareas_tiempo_limite)
+        logger.info('%s',tareas_tiempo_limite)
         
         return tareas_tiempo_limite
