@@ -198,3 +198,63 @@ nav{
     color: black;
     cursor: pointer;
 }
+
+@media(min-width: 0px) and (max-width: 768px){
+    .titulos h1{
+        font-size: 15px;
+    }
+
+    .titulos h4{
+        font-size: 10px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .perfil{
+        padding: 0 10px 0 0;
+        font-size: 8px;
+    }
+
+    .tareas{
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+        flex-wrap: unset;
+        gap:10px;
+    }
+
+    .tarea{
+        width: 290px;
+        height: 100px;
+        position: relative;
+        display: grid;
+        grid-template-rows: 0.5fr 0.5fr;
+        grid-template-columns: 1fr;
+    }
+
+    .nombre_fecha_hora_div{
+        position: relative;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .tareas #agregar-tarea{
+        width: 300px;
+        height: 350px;
+        gap: 5px;
+    }
+
+    .tareas #agregar-tarea .info{
+        flex-direction: column;
+        justify-content: center;
+        justify-self: center;
+    }
+
+    .tareas #agregar-tarea .info input{
+        width: 280px;
+    }
+
+    .tareas #agregar-tarea .info:nth-child(4) label{
+        font-size: 13px;
+    }
+}
